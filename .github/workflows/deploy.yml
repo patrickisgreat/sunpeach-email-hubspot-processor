@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy Infrastructure with Terraform
 
 on:
   push:
@@ -6,22 +6,22 @@ on:
       - main
 
 jobs:
-  deploy:
+  terraform:
     runs-on: ubuntu-latest
-    environment: production # Adjust or remove the environment as necessary
+    name: Terraform
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up Google Cloud
-        uses: google-github-actions/setup-gcloud@master
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
+          terraform_version: 0.14.0 # Specify the Terraform version you are using
 
-      - name: Deploy to Google Cloud
-        run: |
-          # Example: Deploying a Cloud Run service
-          gcloud run deploy your-service-name --image gcr.io/your-project-id/your-image-name --region your-region
-          # Adjust the above command based on your specific deployment needs
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve -var="google_credentials=${{ secrets.GCP_SA_KEY }}" -var="project=your-gcp-project-id" -var="region=your-gcp-region"
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}

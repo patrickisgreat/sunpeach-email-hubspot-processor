@@ -1,7 +1,7 @@
 provider "google" {
-  credentials = file("<YOUR-CREDENTIALS-FILE>.json")
-  project     = "sun-peach-solar"
-  region      = "us-central1"
+  credentials = file("${var.google_credentials}")
+  project     = var.project
+  region      = var.region
 }
 
 resource "google_storage_bucket" "bucket" {

@@ -18,11 +18,15 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.8' # Adjust to your Python version
+          python-version: '3.10' # Make sure this matches your project's requirements
+
+      - name: Install Poetry
+        run: |
+          pip install poetry
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt  # Adjust for your project
+          poetry install
 
       - name: Run tests
-        run: echo "Add your test command here"
+        run: poetry run pytest # Adjust this command to run your tests as specified in your project
